@@ -27,4 +27,5 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/', [MainController::class, 'index'])->name('app');
 Route::get('/test-speaking', [MainController::class, 'testSpeaking'])->name('test-speaking');
-require __DIR__.'/auth.php';
+Route::get('/guide', [MainController::class, 'guide'])->name('guide');
+require __DIR__ . '/auth.php';

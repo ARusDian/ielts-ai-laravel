@@ -9,6 +9,13 @@ export default function Register() {
 
     return (
         <div className="flex w-[100vw] h-[100vh] flex-col px-20 py-12 gap-10 bg-white">
+
+            <div className="d-flex justify-content-end gap-4">
+            <a href="/guide" className="btn btn-lg btn-primary">Guide - How to Start Test?</a>
+
+            <a href="/" className="btn btn-lg btn-secondary">Help</a>
+            </div>
+
             <div className="flex flex-col items-center justify-center h-screen">
                 <button
                     className="bg-white focus:ring-4 font-medium rounded-lg text-lg px-20 py-10 border border-gray-200 shadow-md hover:shadow-xl"
