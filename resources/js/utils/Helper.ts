@@ -1,0 +1,68 @@
+import { nanoid } from "nanoid";
+import { Key } from "react";
+
+// create unique key from id or (if id is undefined ) nanoid()
+export function createKey(id: Key | undefined = undefined): Key {
+    if (id == undefined) {
+        return nanoid();
+    } else {
+        return id;
+    }
+}
+
+
+// @ts-ignore
+const ASSET: string = window.LARAVEL_ASSET_URL.replace(/\/$/, "");
+export type Disk = "root" | "public" | "foreign";
+
+export function asset(disk: Disk = "public", link: string) {
+    if (disk == "public") {
+        return `${ASSET}/storage/${link}`;
+    } else if (disk == "root") {
+        return `${ASSET}/${link}`;
+    }
+}
+
+interface Keyable {
+    id?: Key;
+    __unique_key?: Key;
+}
+export function getUniqueKey(item: Keyable) {
+    if (item.id != null) {
+        return item.id;
+    } else {
+        if (item.__unique_key != null) {
+            return item.__unique_key;
+        }
+        item.__unique_key = nanoid();
+
+        return item.__unique_key;
+    }
+}
+
+export interface Pagination<T> {
+    data: T[];
+    current_page: number;
+    from: number;
+    first_page_url: string;
+    last_page: number;
+    last_page_url: string;
+    path: string;
+    per_page: number;
+    prev_page_url: string | null;
+    to: number;
+    total: number;
+    links: Array<{
+        url: string;
+    }>;
+}
+
+export interface District {
+    id: string;
+    name: string;
+}
+
+export interface GeoTrackAble {
+    latitude?: number;
+    longitude?: number;
+}
