@@ -271,6 +271,12 @@ export default function TestSpeaking({
 
     return (
         <div className="flex w-[100vw] h-[100vh] flex-col px-20 py-12 gap-10 bg-white">
+
+            <div className="d-flex justify-content-end gap-4">
+            <a href="/guide" target="_blank" className="btn btn-lg btn-primary">Guide - How to Start Test?</a>
+
+            <a href="/" target="_blank" className="btn btn-lg btn-secondary">Help</a>
+            </div>
             <section className="w-[100%] max-w-[1300px] h-[90%] mx-auto flex justify-center items-center flex-col relative rounded-3xl shadow-2xl shadow-sky-400/50">
                 <div
                     className="w-[100%] h-[100%] p-5 overflow-y-scroll flex flex-col gap-3"
