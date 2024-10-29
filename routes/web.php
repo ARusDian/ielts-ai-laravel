@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CobaController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -28,3 +29,10 @@ Route::middleware('auth')->group(function () {
 Route::get('/', [MainController::class, 'index'])->name('app');
 Route::get('/test-speaking', [MainController::class, 'testSpeaking'])->name('test-speaking');
 require __DIR__.'/auth.php';
+
+Route::get('/cobadua', [CobaController::class, 'pertama'])->name('coba-pertama');
+
+Route::get('/coba', function(){
+    return 'asdfasdf';
+})->name('app');
+
