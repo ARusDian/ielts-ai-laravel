@@ -86,7 +86,10 @@ class TextToSpeechController extends Controller
             $storage = new StorageClient([
                 'projectId' => env('GCP_PROJECT_ID'),
                 'keyFile' => json_decode(env('GCP_CREDENTIALS_JSON'), true),
+                // 'keyFile' => config('dataku.ini'),
             ]);
+
+            // Log::info(config('dataku.url'));
             $buckets = $storage->buckets();
             // Log::info('Buckets:');
             // foreach ($buckets as $bucket) {
