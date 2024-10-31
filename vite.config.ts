@@ -4,6 +4,7 @@ import react from '@vitejs/plugin-react';
 import legacy from '@vitejs/plugin-legacy'
 import babel from 'vite-plugin-babel'
 import replace from '@rollup/plugin-replace';
+// import nodeExternals from 'vite-plugin-node-externals';
 import commonjs from '@originjs/vite-plugin-commonjs'
 
 
@@ -16,6 +17,7 @@ export default defineConfig({
             refresh: true,
         }),
         react(),
+        // commonjs(),
         // nodeExternals({
         //     // Pastikan untuk mengatur options sesuai kebutuhan
         //     // Jika Anda perlu mengecualikan modul tertentu, Anda bisa menambahkannya di sini
@@ -45,9 +47,10 @@ export default defineConfig({
     //         // Alihkan jika Anda perlu
     //         // 'openai': 'openai/dist/index.js', // Alihkan ke path yang benar
     //         // 'openai': './Applications/MAMP/htdocs/ielts-ai-laravel/node_modules/openai/index.ts', // Alihkan ke path yang benar
+    //         // 'SpeechRecognition' : './Applications/MAMP/htdocs/ielts-ai-laravel/node_modules/openai/index',
     //     },
     // },
     build: {
-        minify: false,
+        minify: false, // Nonaktifkan minifikasi untuk debugging
     },
 });
