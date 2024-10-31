@@ -13,8 +13,7 @@ class MainController extends Controller
         return Inertia::render('App/Register');
     }
 
-    public function testSpeaking(Request $request)
-    {
+    public function testSpeaking(Request $request){
         // return $request->all();
         // return 'testspeaking stop';
         if ($request->input('username') == null) {
