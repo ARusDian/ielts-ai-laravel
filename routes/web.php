@@ -31,9 +31,7 @@ Route::get('/test-speaking', [MainController::class, 'testSpeaking'])->name('tes
 Route::get('/guide', [MainController::class, 'guide'])->name('guide');
 require __DIR__ . '/auth.php';
 
-Route::get('/cobadua', [CobaController::class, 'pertama'])->name('coba-pertama');
+Route::get('/coba', [CobaController::class, 'pertama'])->name('coba-pertama');
+Route::get('/cobadua', [CobaController::class, 'pertama'])->name('coba-dua');
 
-Route::get('/coba', function(){
-    return 'asdfasdf';
-})->name('app');
 
