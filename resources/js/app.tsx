@@ -7,9 +7,6 @@ import { createRoot } from "react-dom/client";
 import 'regenerator-runtime';
 
 
-import 'regenerator-runtime';
-
-
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 
 createInertiaApp({
