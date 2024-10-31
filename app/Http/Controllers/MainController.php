@@ -14,6 +14,8 @@ class MainController extends Controller
     }
 
     public function testSpeaking(Request $request){
+        // return $request->all();
+        // return 'testspeaking stop';
         if ($request->input('username') == null) {
             return redirect()->route('app');
         }

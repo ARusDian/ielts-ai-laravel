@@ -6,6 +6,7 @@ import React from "react";
 export default function Register() {
     const [startError, setStartError] = useState<string>("");
     const [userName, setUserName] = useState<string>("");
+    console.log('start register');
 
     return (
         <div className="flex w-[100vw] h-[100vh] flex-col px-20 py-12 gap-10 bg-white">
@@ -13,17 +14,20 @@ export default function Register() {
                 <button
                     className="bg-white focus:ring-4 font-medium rounded-lg text-lg px-20 py-10 border border-gray-200 shadow-md hover:shadow-xl"
                     onClick={() => {
+                        console.log('button clicked 1');
                         if (userName.length === 0) {
                             setStartError("Please enter your name");
                             return;
                         }
 
+                        console.log('button clicked 2' + userName);
                         router.visit(route("test-speaking"), {
                             data: {
                                 username: `${userName}-${new Date().getTime()}`,
                             },
                             replace: true,
                         });
+                        console.log('button clicked 3');
                     }}
                 >
                     <img

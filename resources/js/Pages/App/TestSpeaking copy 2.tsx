@@ -1,8 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-// import OpenAI from "/Applications/MAMP/htdocs/ielts-ai-laravel/node_modules/openai/index";
-// import { OpenAI } from '/Applications/MAMP/htdocs/ielts-ai-laravel/node_modules/openai/index';
-import OpenAI from 'openai';
-// import OpenAI from '../../../../node_modules/openai/index.mjs';
+import OpenAI from "openai";
 import SpeechRecognition, {
     useSpeechRecognition,
 } from "react-speech-recognition";
@@ -32,14 +29,10 @@ export default function TestSpeaking({
 }) {
     const { startRecording, stopRecording, base64 } = useRecordVoice();
 
-    console.log('openai_api_key');
     const openai = new OpenAI({
         apiKey: openai_api_key,
         dangerouslyAllowBrowser: true,
     });
-
-    console.log('openai');
-    console.log(openai);
 
     const {
         transcript,
@@ -47,32 +40,6 @@ export default function TestSpeaking({
         resetTranscript,
         browserSupportsSpeechRecognition,
     } = useSpeechRecognition();
-
-
-        // here my temp variable
-    //    const listening = false;
-    // //  let  resetTranscript = () => void;
-    //  const  resetTranscript = () => {};
-    //  const transcript = '';
-
-
-
-    // const { transcript, listening, resetTranscript } = useSpeechRecognition();
-
-    console.log('tes');
-    console.log(listening);
-
-    // transcript: string;
-    // interimTranscript: string;
-    // finalTranscript: string;
-    // listening: boolean;
-    // resetTranscript: () => void;
-    // browserSupportsSpeechRecognition: boolean;
-    // isMicrophoneAvailable: boolean;
-
-
-
-
 
     const scrollContainerRef = useRef<HTMLDivElement | null>(null);
     const [chatLogs, setChatLogs] = useState<ChatCompletionMessageParam[]>([]);
@@ -115,7 +82,6 @@ export default function TestSpeaking({
             continuous: true,
             language: "en-US",
         });
-
         console.log("start listening");
         setTimeLeft(TIME);
     };
@@ -308,8 +274,6 @@ export default function TestSpeaking({
                             )}
                         </div>
                     ))}
-                    {/* here  */}
-                    {/* hehe { listening.toString() } */}
                     {listening && (
                         <div
                             className="px-6 py-5 text-lg text-blue-400 min-w-[75px] max-w-[500px] ml-auto"
@@ -336,7 +300,6 @@ export default function TestSpeaking({
 
                 <div className="w-[2%] h-[100%] bg-white absolute right-0"></div>
             </section>
-
 
             <section className="flex w-[100%] max-w-[1300px] mx-auto justify-between ">
                 <div className="flex-1"></div>
@@ -540,7 +503,6 @@ export default function TestSpeaking({
             <section>
                 <audio id="MyAudio" src="" />
             </section>
-
             <Rodal
                 animation="zoom"
                 visible={showResultModal}
@@ -767,7 +729,6 @@ export default function TestSpeaking({
                     </div>
                 </div>
             </Rodal>
-
         </div>
     );
 }
