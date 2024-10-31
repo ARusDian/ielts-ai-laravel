@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import OpenAI from 'openai';
+import OpenAI from "openai";
 import SpeechRecognition, {
     useSpeechRecognition,
 } from "react-speech-recognition";
@@ -29,14 +29,10 @@ export default function TestSpeaking({
 }) {
     const { startRecording, stopRecording, base64 } = useRecordVoice();
 
-    // console.log('openai_api_key');
     const openai = new OpenAI({
         apiKey: openai_api_key,
         dangerouslyAllowBrowser: true,
     });
-
-    // console.log('openai');
-    // console.log(openai);
 
     const {
         transcript,
@@ -45,37 +41,9 @@ export default function TestSpeaking({
         browserSupportsSpeechRecognition,
     } = useSpeechRecognition();
 
-
-        // here my temp variable
-    //    const listening = false;
-    // //  let  resetTranscript = () => void;
-    //  const  resetTranscript = () => {};
-    //  const transcript = '';
-
-
-
-    // const { transcript, listening, resetTranscript } = useSpeechRecognition();
-
-    console.log('tes');
-    console.log(listening);
-
-    // transcript: string;
-    // interimTranscript: string;
-    // finalTranscript: string;
-    // listening: boolean;
-    // resetTranscript: () => void;
-    // browserSupportsSpeechRecognition: boolean;
-    // isMicrophoneAvailable: boolean;
-
-
-
-
-
     const scrollContainerRef = useRef<HTMLDivElement | null>(null);
     const [chatLogs, setChatLogs] = useState<ChatCompletionMessageParam[]>([]);
-    const TIME = 80;
-
-    const MIN_CHAT = 7;
+    const TIME = 90;
 
     const [timeLeft, setTimeLeft] = useState<number>(0);
 
@@ -95,30 +63,31 @@ export default function TestSpeaking({
     });
 
     useEffect(() => {
-        // console.log('useEffect 1');
+        console.log('useEffect 1');
         generateQuestion(username);
         setIsFirst(false);
     }, []);
 
     const handleStopListening = () => {
-        // console.log('handleStopListening running');
+        console.log('handleStopListening running');
         stopRecording();
         SpeechRecognition.stopListening();
+        console.log("stop listening");
     };
 
     const handleStartListening = () => {
-        // console.log('handleStartListening running');
+        console.log('handleStartListening running');
         startRecording();
         SpeechRecognition.startListening({
             continuous: true,
             language: "en-US",
         });
-
+        console.log("start listening");
         setTimeLeft(TIME);
     };
 
     useEffect(() => {
-        // console.log('useEffect 2');
+        console.log('useEffect 2');
         if (listening) {
             const timer = setInterval(() => {
                 setTimeLeft((prevTime) => {
@@ -138,7 +107,7 @@ export default function TestSpeaking({
     }, [listening]);
 
     useEffect(() => {
-        // console.log('useEffect 3');
+        console.log('useEffect 3');
         if (scrollContainerRef.current) {
             scrollContainerRef.current.scrollTop =
                 scrollContainerRef.current.scrollHeight;
@@ -146,21 +115,24 @@ export default function TestSpeaking({
     }, [JSON.stringify(chatLogs)]);
 
     useEffect(() => {
+        console.log('useEffect 4');
+        console.log(transcript);
         if (!listening && chatLogs.length > 0) {
             generateQuestion();
         }
     }, [base64]);
 
     useEffect(() => {
-        // console.log('useEffect 5');
+        console.log('useEffect 5');
         const getResult = async () => {
             setIsResultReady(false);
             const maxAttempt = 10;
+            console.log("getting Result...");
             let isDone = false;
 
             for (let i = 0; i < maxAttempt; i++) {
                 try {
-                    // console.log("attempt :", i);
+                    console.log("attempt :", i);
                     const response = await fetch(route("api.evaluate"), {
                         method: "POST",
                         headers: {
@@ -172,18 +144,18 @@ export default function TestSpeaking({
                     });
 
                     const data = await response.json();
-                    // console.log("data :", data);
+                    console.log("data :", data);
                     setResult(data);
                     setIsResultReady(true);
                     isDone = true;
 
                     if (isDone) {
-                        // console.log("done");
+                        console.log("done");
                         break;
                     }
                 } catch (err: unknown) {
-                    // console.log("Error :", err);
-                    // console.log("retrying :", i);
+                    console.log("Error :", err);
+                    console.log("retrying :", i);
                     setErrorResult({
                         isErrorResult: false,
                         message: `Trying gathering your results for ${i} times.`,
@@ -207,12 +179,13 @@ export default function TestSpeaking({
     }, [showResultModal]);
 
     const generateQuestion = async (uname?: string) => {
+        console.log("generate question...");
         const prompt = {
             role: "assistant",
             content:
                 transcript !== ""
-                    ? `generate one question under 10 words without quotes marks according to to response statement : ${transcript}`
-                    : "generate one question that commonly used in IELTS without quotes marks only in ten words",
+                    ? `generate one question without quotes marks according to to response statement : ${transcript}`
+                    : "generate one question that commonly used in IELTS without quotes marks",
         } as ChatCompletionMessageParam;
 
         const completion = await openai.chat.completions.create({
@@ -220,7 +193,7 @@ export default function TestSpeaking({
             model: "gpt-3.5-turbo-0125",
         });
 
-        const newQuestion = `${completion.choices[0].message.content}`;
+        const newQuestion = completion.choices[0].message.content;
 
         if (chatLogs.length > 0) {
             setChatLogs([
@@ -250,6 +223,7 @@ export default function TestSpeaking({
         })
             .then((res) => res.json())
             .then((data) => {
+                console.log(data);
                 const audio = document.getElementById(
                     "MyAudio",
                 ) as HTMLAudioElement;
@@ -263,61 +237,43 @@ export default function TestSpeaking({
 
     return (
         <div className="flex w-[100vw] h-[100vh] flex-col px-20 py-12 gap-10 bg-white">
-
-            <div className="d-flex justify-content-end gap-4">
-            <a href="/guide" target="_blank" className="btn btn-lg btn-primary">Guide - How to Start Test?</a>
-
-            <a href="/" target="_blank" className="btn btn-lg btn-secondary">Help</a>
-            </div>
             <section className="w-[100%] max-w-[1300px] h-[90%] mx-auto flex justify-center items-center flex-col relative rounded-3xl shadow-2xl shadow-sky-400/50">
                 <div
                     className="w-[100%] h-[100%] p-5 overflow-y-scroll flex flex-col gap-3"
                     style={{ scrollbarWidth: "none" }}
                     ref={scrollContainerRef}
                 >
-                    {chatLogs.map((chat, index) => {
-                        // Hitung jumlah pesan 'assistant' hingga indeks saat ini
-                        const assistantNumber = chatLogs
-                            .slice(0, index + 1)
-                            .filter((c) => c.role === "assistant").length;
-
-                        return (
-                            <div key={index} className="flex">
-                                {chat.role === "assistant" ? (
-                                    <div
-                                        className="bg-blue-400 px-6 py-5 text-lg text-white"
-                                        style={{
-                                            borderRadius: "50px",
-                                            borderTopLeftRadius: 0,
-                                            marginBottom: "5px",
-                                        }}
-                                    >
-                                        <p>
-                                            <strong>{`${assistantNumber}. `}</strong>
-                                            {String(chat.content ?? "")}
-                                        </p>
-                                    </div>
-                                ) : (
-                                    <div
-                                        className="bg-blue-200 px-6 py-5 text-lg text-blue-400 min-w-[75px] max-w-[500px] ml-auto"
-                                        style={{
-                                            borderRadius: "50px",
-                                            borderTopRightRadius: 0,
-                                            marginBottom: "5px",
-                                        }}
-                                    >
+                    {chatLogs.map((chat, index) => (
+                        <div key={index} className="flex">
+                            {chat.role === "assistant" ? (
+                                <div
+                                    className="bg-blue-400 px-6 py-5 text-lg text-white"
+                                    style={{
+                                        borderRadius: "50px",
+                                        borderTopLeftRadius: 0,
+                                        marginBottom: "5px",
+                                    }}
+                                >
+                                    <p>{String(chat.content ?? "")}</p>
+                                </div>
+                            ) : (
+                                <div
+                                    className="bg-blue-200 px-6 py-5 text-lg text-blue-400 min-w-[75px] max-w-[500px] ml-auto"
+                                    style={{
+                                        borderRadius: "50px",
+                                        borderTopRightRadius: 0,
+                                        marginBottom: "5px",
+                                    }}
+                                >
+                                    {
                                         <p className="text-end">
-                                            {typeof chat.content === "string"
-                                                ? chat.content
-                                                : JSON.stringify(chat.content)}
+                                            {typeof chat.content === 'string' ? chat.content : JSON.stringify(chat.content)}
                                         </p>
-                                    </div>
-                                )}
-                            </div>
-                        );
-                    })}
-                    {/* here  */}
-                    {/* hehe { listening.toString() } */}
+                                    }
+                                </div>
+                            )}
+                        </div>
+                    ))}
                     {listening && (
                         <div
                             className="px-6 py-5 text-lg text-blue-400 min-w-[75px] max-w-[500px] ml-auto"
@@ -344,7 +300,6 @@ export default function TestSpeaking({
 
                 <div className="w-[2%] h-[100%] bg-white absolute right-0"></div>
             </section>
-
 
             <section className="flex w-[100%] max-w-[1300px] mx-auto justify-between ">
                 <div className="flex-1"></div>
@@ -486,58 +441,56 @@ export default function TestSpeaking({
                     </button>
                 </div>
 
-                {chatLogs.filter((c) => c.role === "assistant").length > MIN_CHAT && (
-                    <div className="flex-1 flex justify-end">
-                        <button
-                            type="button"
-                            className="flex flex-col justify-center items-center text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm p-5 mb-2 w-[100px]"
-                            onClick={() => setShowResultModal(true)}
+                <div className="flex-1 flex justify-end">
+                    <button
+                        type="button"
+                        className="flex flex-col justify-center items-center text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm p-5 mb-2 w-[100px]"
+                        onClick={() => setShowResultModal(true)}
+                    >
+                        <svg
+                            viewBox="0 0 512 512"
+                            width="50px"
+                            height="50px"
+                            version="1.1"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="#ffffff"
                         >
-                            <svg
-                                viewBox="0 0 512 512"
-                                width="50px"
-                                height="50px"
-                                version="1.1"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="#ffffff"
-                            >
-                                <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+                            <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+                            <g
+                                id="SVGRepo_tracerCarrier"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            ></g>
+                            <g id="SVGRepo_iconCarrier">
+                                {" "}
+                                <title>report-barchart</title>{" "}
                                 <g
-                                    id="SVGRepo_tracerCarrier"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                ></g>
-                                <g id="SVGRepo_iconCarrier">
+                                    id="Page-1"
+                                    stroke="none"
+                                    strokeWidth="1"
+                                    fill="none"
+                                    fillRule="evenodd"
+                                >
                                     {" "}
-                                    <title>report-barchart</title>{" "}
                                     <g
-                                        id="Page-1"
-                                        stroke="none"
-                                        strokeWidth="1"
-                                        fill="none"
-                                        fillRule="evenodd"
+                                        id="add"
+                                        fill="#ffffff"
+                                        transform="translate(42.666667, 85.333333)"
                                     >
                                         {" "}
-                                        <g
-                                            id="add"
-                                            fill="#ffffff"
-                                            transform="translate(42.666667, 85.333333)"
+                                        <path
+                                            d="M341.333333,1.42108547e-14 L426.666667,85.3333333 L426.666667,341.333333 L3.55271368e-14,341.333333 L3.55271368e-14,1.42108547e-14 L341.333333,1.42108547e-14 Z M330.666667,42.6666667 L42.6666667,42.6666667 L42.6666667,298.666667 L384,298.666667 L384,96 L330.666667,42.6666667 Z M106.666667,85.3333333 L106.666,234.666 L341.333333,234.666667 L341.333333,256 L85.3333333,256 L85.3333333,85.3333333 L106.666667,85.3333333 Z M170.666667,149.333333 L170.666667,213.333333 L128,213.333333 L128,149.333333 L170.666667,149.333333 Z M234.666667,106.666667 L234.666667,213.333333 L192,213.333333 L192,106.666667 L234.666667,106.666667 Z M298.666667,170.666667 L298.666667,213.333333 L256,213.333333 L256,170.666667 L298.666667,170.666667 Z"
+                                            id="Combined-Shape"
                                         >
                                             {" "}
-                                            <path
-                                                d="M341.333333,1.42108547e-14 L426.666667,85.3333333 L426.666667,341.333333 L3.55271368e-14,341.333333 L3.55271368e-14,1.42108547e-14 L341.333333,1.42108547e-14 Z M330.666667,42.6666667 L42.6666667,42.6666667 L42.6666667,298.666667 L384,298.666667 L384,96 L330.666667,42.6666667 Z M106.666667,85.3333333 L106.666,234.666 L341.333333,234.666667 L341.333333,256 L85.3333333,256 L85.3333333,85.3333333 L106.666667,85.3333333 Z M170.666667,149.333333 L170.666667,213.333333 L128,213.333333 L128,149.333333 L170.666667,149.333333 Z M234.666667,106.666667 L234.666667,213.333333 L192,213.333333 L192,106.666667 L234.666667,106.666667 Z M298.666667,170.666667 L298.666667,213.333333 L256,213.333333 L256,170.666667 L298.666667,170.666667 Z"
-                                                id="Combined-Shape"
-                                            >
-                                                {" "}
-                                            </path>{" "}
-                                        </g>{" "}
+                                        </path>{" "}
                                     </g>{" "}
-                                </g>
-                            </svg>
-                            Get the Result
-                        </button>
-                    </div>
-                )}
+                                </g>{" "}
+                            </g>
+                        </svg>
+                        Get the Result
+                    </button>
+                </div>
             </section>
 
             <section className="flex justify-center">
@@ -550,7 +503,6 @@ export default function TestSpeaking({
             <section>
                 <audio id="MyAudio" src="" />
             </section>
-
             <Rodal
                 animation="zoom"
                 visible={showResultModal}
@@ -777,7 +729,6 @@ export default function TestSpeaking({
                     </div>
                 </div>
             </Rodal>
-
         </div>
     );
 }
