@@ -64,7 +64,7 @@ def evaluate_conversation(username: str) -> list:
 
     # Preprocess user messages
     corrected_punctuation = get_chatgpt_response(
-        f"{user_messages}\n\nEach list is a paragraph, correct the punctuation of each paragraph by maintaining all the words without changing them at all, ther result must be on python list",
+        f"{user_messages}\n\nEach list is a paragraph, correct the punctuation of each paragraph by maintaining all the words without changing them at all, the result must be exact on python list, dont add any comments or additional information.\n\n",
         parse_json=False,
     )
 
