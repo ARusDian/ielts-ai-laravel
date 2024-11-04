@@ -107,15 +107,29 @@ class TextToSpeechController extends Controller
 
             // Define the file name and save path
             $fileName = 'test_output.mp3';
+            $filePath = 'app/' . $fileName;
             Storage::disk('local')->put($fileName, $audioContent);
 
             Log::info("Audio content has been successfully saved as {$fileName}");
 
             // Close the client
             $textToSpeechClient->close();
+
+            // Return the path to the generated file
+            return response()->json([
+                'success' => true,
+                'message' => 'Audio file generated successfully.',
+                'file_path' => storage_path($filePath)
+            ]);
         } catch (\Exception $e) {
             Log::error("Error testing GCP Text-to-Speech API: " . $e->getMessage());
             Log::error($e->getTraceAsString());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to generate audio file.',
+                'error' => $e->getMessage()
+            ]);
         }
     }
 
