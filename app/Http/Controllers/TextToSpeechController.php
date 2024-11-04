@@ -134,6 +134,33 @@ class TextToSpeechController extends Controller
         }
     }
 
+    public function testingGCP()
+    {
+        try {
+            $storage = new StorageClient([
+                'projectId' => env('GCP_PROJECT_ID'),
+                'keyFile' => json_decode(env('GCP_CREDENTIALS_JSON'), true),
+                // 'keyFile' => config('dataku.ini'),
+            ]);
+
+            // Log::info(config('dataku.url'));
+            $buckets = $storage->buckets();
+            // Log::info('Buckets:');
+            // foreach ($buckets as $bucket) {
+            //     Log::info("- {$bucket->name()}");
+            // }
+            // Log::info('Listed all storage buckets.');
+            return response()->json([
+                'message' => 'Listed all storage buckets.',
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error("Error authenticating with GCP: " . $e->getMessage());
+            return response()->json([
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
     public function authenticateWithGCP()
     {
         try {

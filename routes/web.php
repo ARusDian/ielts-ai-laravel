@@ -37,4 +37,3 @@ Route::get('/coba', [CobaController::class, 'pertama'])->name('coba-pertama');
 Route::get('/cobadua', [CobaController::class, 'pertama'])->name('coba-dua');
 
 Route::get('testing-GCP', [TextToSpeechController::class, 'testingGCP'])->name('testing-GCP');
-
