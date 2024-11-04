@@ -1,8 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-// import OpenAI from "/Applications/MAMP/htdocs/ielts-ai-laravel/node_modules/openai/index";
-// import { OpenAI } from '/Applications/MAMP/htdocs/ielts-ai-laravel/node_modules/openai/index';
 import OpenAI from 'openai';
-// import OpenAI from '../../../../node_modules/openai/index.mjs';
 import SpeechRecognition, {
     useSpeechRecognition,
 } from "react-speech-recognition";
@@ -32,14 +29,10 @@ export default function TestSpeaking({
 }) {
     const { startRecording, stopRecording, base64 } = useRecordVoice();
 
-    console.log('openai_api_key');
     const openai = new OpenAI({
         apiKey: openai_api_key,
         dangerouslyAllowBrowser: true,
     });
-
-    console.log('openai');
-    console.log(openai);
 
     const {
         transcript,
@@ -47,32 +40,6 @@ export default function TestSpeaking({
         resetTranscript,
         browserSupportsSpeechRecognition,
     } = useSpeechRecognition();
-
-
-        // here my temp variable
-    //    const listening = false;
-    // //  let  resetTranscript = () => void;
-    //  const  resetTranscript = () => {};
-    //  const transcript = '';
-
-
-
-    // const { transcript, listening, resetTranscript } = useSpeechRecognition();
-
-    console.log('tes');
-    console.log(listening);
-
-    // transcript: string;
-    // interimTranscript: string;
-    // finalTranscript: string;
-    // listening: boolean;
-    // resetTranscript: () => void;
-    // browserSupportsSpeechRecognition: boolean;
-    // isMicrophoneAvailable: boolean;
-
-
-
-
 
     const scrollContainerRef = useRef<HTMLDivElement | null>(null);
     const [chatLogs, setChatLogs] = useState<ChatCompletionMessageParam[]>([]);
@@ -96,32 +63,26 @@ export default function TestSpeaking({
     });
 
     useEffect(() => {
-        console.log('useEffect 1');
         generateQuestion(username);
         setIsFirst(false);
     }, []);
 
     const handleStopListening = () => {
-        console.log('handleStopListening running');
         stopRecording();
         SpeechRecognition.stopListening();
-        console.log("stop listening");
     };
 
     const handleStartListening = () => {
-        console.log('handleStartListening running');
         startRecording();
         SpeechRecognition.startListening({
             continuous: true,
             language: "en-US",
         });
 
-        console.log("start listening");
         setTimeLeft(TIME);
     };
 
     useEffect(() => {
-        console.log('useEffect 2');
         if (listening) {
             const timer = setInterval(() => {
                 setTimeLeft((prevTime) => {
@@ -141,7 +102,6 @@ export default function TestSpeaking({
     }, [listening]);
 
     useEffect(() => {
-        console.log('useEffect 3');
         if (scrollContainerRef.current) {
             scrollContainerRef.current.scrollTop =
                 scrollContainerRef.current.scrollHeight;
@@ -149,19 +109,15 @@ export default function TestSpeaking({
     }, [JSON.stringify(chatLogs)]);
 
     useEffect(() => {
-        console.log('useEffect 4');
-        console.log(transcript);
         if (!listening && chatLogs.length > 0) {
             generateQuestion();
         }
     }, [base64]);
 
     useEffect(() => {
-        console.log('useEffect 5');
         const getResult = async () => {
             setIsResultReady(false);
             const maxAttempt = 10;
-            console.log("getting Result...");
             let isDone = false;
 
             for (let i = 0; i < maxAttempt; i++) {
@@ -314,8 +270,6 @@ export default function TestSpeaking({
                             )}
                         </div>
                     ))}
-                    {/* here  */}
-                    {/* hehe { listening.toString() } */}
                     {listening && (
                         <div
                             className="px-6 py-5 text-lg text-blue-400 min-w-[75px] max-w-[500px] ml-auto"

@@ -29,7 +29,7 @@ Route::middleware('auth')->group(function () {
 Route::get('/', [MainController::class, 'index'])->name('app');
 Route::get('/test-speaking', [MainController::class, 'testSpeaking'])->name('test-speaking');
 Route::get('/guide', [MainController::class, 'guide'])->name('guide');
-require __DIR__ . '/auth.php';
+// require __DIR__ . '/auth.php';
 
 Route::get('/coba', [CobaController::class, 'pertama'])->name('coba-pertama');
 Route::get('/cobadua', [CobaController::class, 'pertama'])->name('coba-dua');
