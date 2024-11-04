@@ -17,7 +17,6 @@ class TextToSpeechController extends Controller
     public function handleRequest(Request $request)
     {
         try {
-            $this->authenticateWithGCP();
             $client = new TextToSpeechClient();
 
             $text = $request->input('text');
@@ -75,35 +74,48 @@ class TextToSpeechController extends Controller
                 'src' => Storage::url($assistantAudioPath),  // Generates public URL
             ], 200);
         } catch (\Exception $e) {
-            Log::error("An error occurred: " . $e->getMessage());
-            return response()->json(['error' => $e->getMessage()], 500);
+            Log::error("An error occurred: " . $e);
+            return response()->json(['error' => $e], 500);
         }
     }
+
 
     public function testingGCP()
     {
         try {
-            $storage = new StorageClient([
-                'projectId' => env('GCP_PROJECT_ID'),
-                'keyFile' => json_decode(env('GCP_CREDENTIALS_JSON'), true),
-                // 'keyFile' => config('dataku.ini'),
-            ]);
+            // Instantiate the Text-to-Speech client
+            $textToSpeechClient = new TextToSpeechClient();
 
-            // Log::info(config('dataku.url'));
-            $buckets = $storage->buckets();
-            // Log::info('Buckets:');
-            // foreach ($buckets as $bucket) {
-            //     Log::info("- {$bucket->name()}");
-            // }
-            // Log::info('Listed all storage buckets.');
-            return response()->json([
-                'message' => 'Listed all storage buckets.',
-            ], 200);
+            // Set the text input for synthesis
+            $synthesisInput = new SynthesisInput();
+            $synthesisInput->setText("Hello! This is a test of the Google Cloud Text-to-Speech API.");
+
+            // Configure the voice settings (e.g., language and gender)
+            $voice = new VoiceSelectionParams();
+            $voice->setLanguageCode('en-US'); // English, US
+            $voice->setSsmlGender(\Google\Cloud\TextToSpeech\V1\SsmlVoiceGender::NEUTRAL);
+
+            // Configure audio output format
+            $audioConfig = new AudioConfig();
+            $audioConfig->setAudioEncoding(AudioEncoding::MP3);
+
+            // Synthesize speech
+            $response = $textToSpeechClient->synthesizeSpeech($synthesisInput, $voice, $audioConfig);
+
+            // Retrieve the audio content from the response
+            $audioContent = $response->getAudioContent();
+
+            // Define the file name and save path
+            $fileName = 'test_output.mp3';
+            Storage::disk('local')->put($fileName, $audioContent);
+
+            Log::info("Audio content has been successfully saved as {$fileName}");
+
+            // Close the client
+            $textToSpeechClient->close();
         } catch (\Exception $e) {
-            Log::error("Error authenticating with GCP: " . $e->getMessage());
-            return response()->json([
-                'error' => $e->getMessage(),
-            ], 500);
+            Log::error("Error testing GCP Text-to-Speech API: " . $e->getMessage());
+            Log::error($e->getTraceAsString());
         }
     }
 
