@@ -4,6 +4,7 @@ use App\Http\Controllers\CobaController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TextToSpeechController;
+use App\Http\Controllers\PythonEvaluationController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -36,3 +37,4 @@ Route::get('/coba', [CobaController::class, 'pertama'])->name('coba-pertama');
 Route::get('/cobadua', [CobaController::class, 'pertama'])->name('coba-dua');
 
 Route::get('testing-GCP', [TextToSpeechController::class, 'testingGCP'])->name('testing-GCP');
+
