@@ -64,4 +64,17 @@ class PythonEvaluationController extends Controller
             return response()->json(['error' => 'Error getting results, please try again.'], 500);
         }
     }
+
+    public function testPythonExecution()
+    {
+        // Specify the username for testing
+        $username = 'Keren-1730759444011';
+
+        // Create a dummy request to pass to the handleRequest method
+        $dummyRequest = new Request();
+        $dummyRequest->merge(['user' => $username]);
+
+        // Call the existing handleRequest method
+        return $this->handleRequest($dummyRequest);
+    }
 }
