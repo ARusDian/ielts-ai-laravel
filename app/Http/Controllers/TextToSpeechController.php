@@ -84,6 +84,7 @@ class TextToSpeechController extends Controller
     {
         try {
             // Instantiate the Text-to-Speech client
+            Log::info("GOOGLE_APPLICATION_CREDENTIALS: " . env('GOOGLE_APPLICATION_CREDENTIALS'));
             $textToSpeechClient = new TextToSpeechClient();
 
             // Set the text input for synthesis
