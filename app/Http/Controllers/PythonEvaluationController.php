@@ -74,7 +74,32 @@ class PythonEvaluationController extends Controller
         $dummyRequest = new Request();
         $dummyRequest->merge(['user' => $username]);
 
-        // Call the existing handleRequest method
-        return $this->handleRequest($dummyRequest);
+        // Escape the username to prevent command injection
+        $escapedUsername = escapeshellarg($username);
+
+        // Command to execute the Python script with sudo
+        $command = "/usr/bin/python3 /var/www/ielts-ai/src/child_processes/evaluation.py --user $escapedUsername 2>&1"; // Capture both stdout and stderr
+
+        // Execute the command
+        $output = shell_exec($command);
+
+        // Log the raw output for debugging
+        Log::info('Raw Python Script Output: ' . $output);
+
+        // Attempt to decode the JSON output
+        $decodedOutput = json_decode($output, true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            Log::error('Failed to decode JSON output: ' . json_last_error_msg());
+            Log::info('Output received: ' . $output);  // Log the actual output for further investigation
+        } else {
+            Log::info('Python Script Result: ' . print_r($decodedOutput, true));
+        }
+
+        // Return both the raw output and the result (or an error message)
+        return response()->json([
+            'raw_output' => $output,
+            'result' => isset($decodedOutput) ? $decodedOutput : null,
+            'json_error' => json_last_error_msg() !== JSON_ERROR_NONE ? json_last_error_msg() : null,
+        ]);
     }
 }

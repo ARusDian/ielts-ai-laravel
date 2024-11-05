@@ -13,6 +13,7 @@ import argparse
 from dotenv import load_dotenv, find_dotenv
 import logging
 
+os.environ[ 'NUMBA_CACHE_DIR' ] = '/tmp/'
 
 # Konfigurasi logging
 def setup_logger(log_file: str):
@@ -33,7 +34,7 @@ def setup_logger(log_file: str):
     )
 
 
-root_path = os.path.join(os.getcwd(), "storage/app/public/audio/records")
+root_path = os.path.join(os.getcwd(), "storage/audio/records")
 global CLIENT
 
 
@@ -464,20 +465,29 @@ def get_chatgpt_response(
 
 
 if __name__ == "__main__":
-    # Specify the path to the .env.local file
-    env_path = find_dotenv(".env")
+    try:
+        env_path = find_dotenv(".env")
+        load_dotenv(dotenv_path=env_path)
 
-    # Load the environment variables from the .env.local file
-    load_dotenv(dotenv_path=env_path)
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--user", type=str, help="user name")
-    api_key = os.getenv("OPENAI_API_KEY")
-    args = parser.parse_args()
-    CLIENT = OpenAI(api_key=api_key)
-    log_dir = os.path.join(os.getcwd(), "./storage/logs")
-    os.makedirs(log_dir, exist_ok=True)
-    log_file_path = os.path.join(log_dir, "evaluation-error.log")
+        parser = argparse.ArgumentParser()
+        parser.add_argument("--user", type=str, help="user name")
+        args = parser.parse_args()
 
-    setup_logger(log_file_path)
+        api_key = os.getenv("OPENAI_API_KEY")
+        CLIENT = OpenAI(api_key=api_key)
 
-    print(evaluate_conversation(args.user))
+        log_dir = os.path.join(os.getcwd(), "./storage/logs")
+        os.makedirs(log_dir, exist_ok=True)
+        log_file_path = os.path.join(log_dir, "evaluation-error.log")
+        setup_logger(log_file_path)
+
+        try:
+            print(evaluate_conversation(args.user))
+        except Exception as e:
+            logging.error(f"Error in main execution: {str(e)}")
+            error_message = {"error": str(e)}
+            print(json.dumps(error_message))  # Return error as JSON
+    except Exception as e:
+        logging.error(f"Error in main execution: {e}")
+        error_message = {"error": str(e)}
+        print(json.dumps(error_message))  # Return error as JSON
