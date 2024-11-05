@@ -34,7 +34,7 @@ def setup_logger(log_file: str):
     )
 
 
-root_path = os.path.join(os.getcwd(), "storage/app/public/audio/records")
+root_path = os.path.join(os.getcwd(), "storage/audio/records")
 global CLIENT
 
 
