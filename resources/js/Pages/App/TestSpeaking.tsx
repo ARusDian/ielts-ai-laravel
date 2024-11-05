@@ -169,7 +169,6 @@ export default function TestSpeaking({
     }, [showResultModal]);
 
     const generateQuestion = async (uname?: string) => {
-        console.log("generate question...");
         const prompt = {
             role: "assistant",
             content:
@@ -213,7 +212,6 @@ export default function TestSpeaking({
         })
             .then((res) => res.json())
             .then((data) => {
-                console.log(data);
                 const audio = document.getElementById(
                     "MyAudio",
                 ) as HTMLAudioElement;
