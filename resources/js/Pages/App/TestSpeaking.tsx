@@ -45,6 +45,10 @@ export default function TestSpeaking({
     const [chatLogs, setChatLogs] = useState<ChatCompletionMessageParam[]>([]);
     const TIME = 90;
 
+    const MAX_CHAT = 10;
+
+    const MIN_CHAT = 6;
+
     const [timeLeft, setTimeLeft] = useState<number>(0);
 
     const [showResultModal, setShowResultModal] = useState<boolean>(false);
@@ -173,8 +177,8 @@ export default function TestSpeaking({
             role: "assistant",
             content:
                 transcript !== ""
-                    ? `generate one question without quotes marks according to to response statement : ${transcript}`
-                    : "generate one question that commonly used in IELTS without quotes marks",
+                    ? `generate one question without quotes marks according to to response statement : ${transcript} only in ten words`
+                    : "generate one question that commonly used in IELTS without quotes marks only in ten words",
         } as ChatCompletionMessageParam;
 
         const completion = await openai.chat.completions.create({
