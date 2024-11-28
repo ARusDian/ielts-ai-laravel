@@ -105,6 +105,19 @@ def evaluate_conversation(username: str) -> list:
     #     scores["pronunciation"],
     #     ielts_score,
     # ]
+    
+    # write the result to a file
+    with open(os.path.join(user_dir, "result.json"), "w") as file:
+        json.dump(
+            {
+                "fluency_and_coherence": scores["fluency_and_coherence"],
+                "lexical_resource": scores["lexical_resource"],
+                "grammar": scores["grammar"],
+                "pronunciation": scores["pronunciation"],
+                "ielts_score": ielts_score,
+            },
+            file,
+        )
 
     return json.dumps(
         {
