@@ -45,32 +45,6 @@ export default function TestSpeaking({
         browserSupportsSpeechRecognition,
     } = useSpeechRecognition();
 
-
-        // here my temp variable
-    //    const listening = false;
-    // //  let  resetTranscript = () => void;
-    //  const  resetTranscript = () => {};
-    //  const transcript = '';
-
-
-
-    // const { transcript, listening, resetTranscript } = useSpeechRecognition();
-
-    console.log('tes');
-    console.log(listening);
-
-    // transcript: string;
-    // interimTranscript: string;
-    // finalTranscript: string;
-    // listening: boolean;
-    // resetTranscript: () => void;
-    // browserSupportsSpeechRecognition: boolean;
-    // isMicrophoneAvailable: boolean;
-
-
-
-
-
     const scrollContainerRef = useRef<HTMLDivElement | null>(null);
     const [chatLogs, setChatLogs] = useState<ChatCompletionMessageParam[]>([]);
     const TIME = 80;
