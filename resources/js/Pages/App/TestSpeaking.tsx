@@ -185,7 +185,7 @@ export default function TestSpeaking({
             role: "assistant",
             content:
                 transcript !== ""
-                    ? `generate one question without quotes marks according to to response statement : ${transcript} only in ten words`
+                    ? `generate one question under 10 words without quotes marks according to to response statement : ${transcript}`
                     : "generate one question that commonly used in IELTS without quotes marks only in ten words",
         } as ChatCompletionMessageParam;
 
