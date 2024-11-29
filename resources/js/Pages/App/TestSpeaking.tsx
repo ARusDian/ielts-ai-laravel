@@ -47,8 +47,9 @@ export default function TestSpeaking({
 
     const scrollContainerRef = useRef<HTMLDivElement | null>(null);
     const [chatLogs, setChatLogs] = useState<ChatCompletionMessageParam[]>([]);
+    
+    // HYPERPARAMETERS
     const TIME = 80;
-
     const MIN_CHAT = 7;
 
     const [timeLeft, setTimeLeft] = useState<number>(0);
